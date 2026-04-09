@@ -1,0 +1,20 @@
+Utilisation de 30 threads via Slurm.
+Démarrage sans cache pour éviter saturation disque...
+--- Traitement Redshift 6.54 ---
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/main.py", line 105, in <module>
+    main()
+    ~~~~^^
+  File "/gpfs/users/ouadjout/skadatachallenge/main.py", line 75, in main
+    coevals = p21c.run_coeval(
+        redshift=z,
+    ...<3 lines>...
+        progressbar=False
+    )
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/py21cmfast/drivers/coeval.py", line 639, in run_coeval
+    return [coeval for coeval, in_outputs in generate_coeval(**kwargs) if in_outputs]
+                                             ~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/py21cmfast/drivers/_param_config.py", line 497, in __call__
+    yield from self._func(**kwargs)
+               ~~~~~~~~~~^^^^^^^^^^
+TypeError: generate_coeval() got an unexpected keyword argument 'redshift'

@@ -1,0 +1,38 @@
+Lmod has detected the following error: The following module(s) are unknown:
+"fftw/3.3.8"
+
+Please check the spelling or version number. Also try "module spider ..."
+It is also possible your cache file is out-of-date; it may help to try:
+  $ module --ignore_cache load "fftw/3.3.8"
+
+Also make sure that all modulefiles written in TCL start with the string
+#%Module
+
+
+
+Lmod has detected the following error: The following module(s) are unknown:
+"gsl"
+
+Please check the spelling or version number. Also try "module spider ..."
+It is also possible your cache file is out-of-date; it may help to try:
+  $ module --ignore_cache load "gsl"
+
+Also make sure that all modulefiles written in TCL start with the string
+#%Module
+
+
+
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/test.py", line 2, in <module>
+    import py21cmfast as p21c
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/py21cmfast/__init__.py", line 74, in <module>
+    from . import lightconers, plotting, wrapper
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/py21cmfast/lightconers.py", line 22, in <module>
+    from .rsds import estimate_rsd_displacements
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/py21cmfast/rsds.py", line 13, in <module>
+    from .wrapper.inputs import InputParameters
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/py21cmfast/wrapper/inputs.py", line 30, in <module>
+    from .._cfg import config
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/py21cmfast/_cfg.py", line 11, in <module>
+    from .c_21cmfast import ffi, lib
+ImportError: libfftw3f_omp.so.3: cannot open shared object file: No such file or directory

@@ -1,0 +1,1 @@
+/var/spool/slurm//job164939/slurm_script: line 11: 230142 Segmentation fault      (core dumped) python3 main.py

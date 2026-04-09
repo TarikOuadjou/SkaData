@@ -1,0 +1,79 @@
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.524)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.791)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.925)
+Log-likelihood: -3249.71, Log-prior: -12.62, Log-posterior: -3262.33
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.254)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.360)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.463)
+Log-likelihood: -1163.16, Log-prior: -12.62, Log-posterior: -1175.78
+New best theta: {'ALPHA_STAR': 0.49405166747388973, 'F_STAR10': -2.197403636108157, 'F_ESC10': -0.3896569775384191, 'ALPHA_ESC': -0.8663568071733312, 'M_TURN': 8.307783553922341, 't_STAR': 0.48208336563223375, 'L_X': 41.52233387081493, 'NU_X_THRESH': 1157.255011936759}, Log-posterior: -1175.78
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.002)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.003)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.005)
+Log-likelihood: -5610.22, Log-prior: -12.62, Log-posterior: -5622.84
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.049)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.081)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.118)
+Log-likelihood: -1531.20, Log-prior: -12.62, Log-posterior: -1543.82
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.381)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.650)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.841)
+Log-likelihood: -2611.36, Log-prior: -12.62, Log-posterior: -2623.98
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.999)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=1.000)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=1.000)
+Log-likelihood: -1635.41, Log-prior: -12.62, Log-posterior: -1648.03
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.371)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.637)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.832)
+Log-likelihood: -2517.92, Log-prior: -12.62, Log-posterior: -2530.54
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.117)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.191)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.274)
+Log-likelihood: -1179.99, Log-prior: -12.62, Log-posterior: -1192.61
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.738)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.899)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.967)
+Log-likelihood: -1419.58, Log-prior: -12.62, Log-posterior: -1432.19
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.014)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.025)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.041)
+Log-likelihood: -3152.89, Log-prior: -12.62, Log-posterior: -3165.51
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:00… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=1.000)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=1.000)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=1.000)
+Log-likelihood: -1636.37, Log-prior: -12.62, Log-posterior: -1648.99
+Best theta found: {'ALPHA_STAR': 0.8867523846713712, 'F_STAR10': -0.2413692082603922, 'F_ESC10': 0.06484402203128115, 'ALPHA_ESC': 0.05207789924750683, 'M_TURN': 9.312047831788018, 't_STAR': 0.5810438701807614, 'L_X': 41.75092594256621, 'NU_X_THRESH': 960.0828659687016} with log-posterior: -1175.7819940522047

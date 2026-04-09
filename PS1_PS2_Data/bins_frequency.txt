@@ -1,0 +1,6 @@
+# Frequency binning for SDC3b
+# Power spectra are produced for the following frequency intervals
+# Min freq [MHz]     Max freq [MHz]
+     151.0     169.9
+     166.0     180.9
+     181.0     195.9

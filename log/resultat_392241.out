@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/main.py", line 21, in <module>
+    astro_params = p21c.AstroParams(
+        alpha_STAR=0.5,
+    ...<7 lines>...
+        NU_X_BAND_MAX=2000.0, # Max of the band, don't moove this one !
+    )
+TypeError: AstroParams.__init__() got an unexpected keyword argument 'alpha_STAR'. Did you mean 'ALPHA_STAR'?

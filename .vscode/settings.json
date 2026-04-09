@@ -1,0 +1,13 @@
+{
+    "python.defaultInterpreterPath": "/gpfs/users/ouadjout/skadatachallenge/.venv/bin/python",
+    "terminal.integrated.profiles.linux": {
+        "bash": {
+            "path": "bash",
+            "args": [
+                "-l"
+            ]
+        }
+    },
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "python.terminal.activateEnvInCurrentTerminal": true
+}

@@ -1,0 +1,2 @@
+/var/spool/slurm//job164882/slurm_script: line 11: 1646144 Killed                  python3 main.py
+[2026-03-18T07:07:01.423] error: Detected 1 oom_kill event in StepId=164882.batch. Some of the step tasks have been OOM Killed.

@@ -1,0 +1,14 @@
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:07… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:12… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:22… • 0:00:… remaining
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/test_light.py", line 108, in <module>
+    main()
+    ~~~~^^
+  File "/gpfs/users/ouadjout/skadatachallenge/test_light.py", line 94, in main
+    h = lightcone.astropy_cosmology.h
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<attrs generated getattr py21cmfast.drivers.lightcone.LightCone>", line 11, in __getattr__
+    return super().__getattribute__(item)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+AttributeError: 'LightCone' object has no attribute 'astropy_cosmology'
