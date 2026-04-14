@@ -1,0 +1,4 @@
+[Job 109] Running with theta: {'ALPHA_STAR': np.float64(0.4547282950952649), 'F_STAR10': np.float64(-2.359030787833035), 'F_ESC10': np.float64(-1.3229625634849072), 'ALPHA_ESC': np.float64(-0.5250279079191387), 'M_TURN': np.float64(9.77863247692585), 't_STAR': np.float64(0.5612386297434568), 'X_RAY_SPEC_INDEX': np.float64(0.8053008331917226)}
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:05… • 0:00:… remaining
+          Evolving Halos         6% •  1/17 redshifts • 0:09… • -:--:… remaining
+[Job 109] FAILED: Unable to synchronously create file (file signature not found)

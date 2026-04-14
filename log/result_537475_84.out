@@ -1,0 +1,2 @@
+[Job 84] Running with theta: {'ALPHA_STAR': np.float64(-0.43596315244212747), 'F_STAR10': np.float64(-1.2563141724094748), 'F_ESC10': np.float64(0.060767315328121185), 'ALPHA_ESC': np.float64(0.404822610784322), 'M_TURN': np.float64(9.238887241110206), 't_STAR': np.float64(0.43617317359894514), 'X_RAY_SPEC_INDEX': np.float64(1.7256178059615195)}
+[Job 84] FAILED: module 'py21cmfast' has no attribute 'Cache'

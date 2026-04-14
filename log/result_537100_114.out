@@ -1,0 +1,3 @@
+[Job 114] Running with theta: {'ALPHA_STAR': np.float64(0.4859740687534213), 'F_STAR10': np.float64(-0.6825503753498197), 'F_ESC10': np.float64(-0.3677930161356926), 'ALPHA_ESC': np.float64(0.2902753292582929), 'M_TURN': np.float64(8.535220485180616), 't_STAR': np.float64(0.4052622299641371), 'X_RAY_SPEC_INDEX': np.float64(0.9593010693788528)}
+Perturbing Matter Fields         0% •  0/17 redshifts • 0:00… • -:--:… remaining
+[Job 114] FAILED: Unable to synchronously create file (bad object header version number)

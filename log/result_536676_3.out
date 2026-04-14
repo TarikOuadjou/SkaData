@@ -1,0 +1,8 @@
+[Job 3] Running with theta: {'ALPHA_STAR': np.float64(-0.15021864464506507), 'F_STAR10': np.float64(-2.178268488496542), 'F_ESC10': np.float64(-2.324268091470003), 'ALPHA_ESC': np.float64(-0.03293349873274565), 'M_TURN': np.float64(8.205660551786423), 't_STAR': np.float64(0.6262036338448524), 'X_RAY_SPEC_INDEX': np.float64(0.5492679397575557)}
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:03… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:09… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:17… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.007)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.010)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.012)
+[Job 3] Done successfully.

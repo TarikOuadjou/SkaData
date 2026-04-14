@@ -1,0 +1,2 @@
+[Job 127] Running with theta: {'ALPHA_STAR': np.float64(0.1415573046542704), 'F_STAR10': np.float64(-2.7019691644236445), 'F_ESC10': np.float64(-1.5948683395981789), 'ALPHA_ESC': np.float64(0.20428400300443172), 'M_TURN': np.float64(8.435533279553056), 't_STAR': np.float64(0.6993105271831155), 'X_RAY_SPEC_INDEX': np.float64(1.2967661693692207)}
+[Job 127] FAILED: Unable to synchronously create file (truncated file: eof = 171508192, sblock->base_addr = 0, stored_eof = 343008192)

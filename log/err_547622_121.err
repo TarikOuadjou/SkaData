@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "h5py/_objects.pyx", line 210, in h5py._objects.ObjectID._dealloc
+  File "h5py/_objects.pyx", line 213, in h5py._objects.ObjectID._dealloc
+RuntimeError: Can't decrement id ref count (slist already enabled?)
+Exception ignored in: 'h5py._objects.ObjectID.__dealloc__'
+Traceback (most recent call last):
+  File "h5py/_objects.pyx", line 210, in h5py._objects.ObjectID._dealloc
+  File "h5py/_objects.pyx", line 213, in h5py._objects.ObjectID._dealloc
+RuntimeError: Can't decrement id ref count (slist already enabled?)

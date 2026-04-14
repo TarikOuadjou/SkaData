@@ -8,4 +8,4 @@
 #SBATCH --mem=40G                     # Mémoire vive allouée
 module load fftw/3.3.10/gcc-15.1.0-openmpi
 source /gpfs/users/ouadjout/skadatachallenge/.venv/bin/activate
-python3 test_light.py
+python3 scripts/sobol_sampler.py

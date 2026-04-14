@@ -1,0 +1,16 @@
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:03… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:09… • 0:00:… remaining
+   Evolving Astrophysics ━━━━━ 100% • 17/17 redshifts • 0:17… • 0:00:… remaining
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.396)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.554)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.729)
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/main.py", line 12, in <module>
+    ps2d_list, x_HI_mean_list = model(theta_fixed)
+                                ~~~~~^^^^^^^^^^^^^
+  File "/gpfs/users/ouadjout/skadatachallenge/generate_data/model.py", line 74, in model
+    ps2d_list = adding_instrumental_noise(ps2d_list)
+  File "/gpfs/users/ouadjout/skadatachallenge/generate_data/model.py", line 18, in adding_instrumental_noise
+    files_noise = sorted(glob.glob("PS1_PS2_Data/Pk_PS_averaged_noise_*.txt"))
+                         ^^^^^^^^^
+AttributeError: 'function' object has no attribute 'glob'

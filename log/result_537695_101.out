@@ -1,0 +1,2 @@
+[Job 101] Running with theta: {'ALPHA_STAR': np.float64(0.418201950378716), 'F_STAR10': np.float64(-2.1865047616884112), 'F_ESC10': np.float64(-0.20338836312294006), 'ALPHA_ESC': np.float64(-0.7428340157493949), 'M_TURN': np.float64(8.29001834243536), 't_STAR': np.float64(0.9290921138599515), 'X_RAY_SPEC_INDEX': np.float64(1.1455679880455136)}
+[Job 101] FAILED: Unable to synchronously create file (bad object header version number)

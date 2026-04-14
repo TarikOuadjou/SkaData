@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/main.py", line 12, in <module>
+    ps2d_list, x_HI_mean_list = model(theta_fixed)
+                                ~~~~~^^^^^^^^^^^^^
+  File "/gpfs/users/ouadjout/skadatachallenge/generate_data/model.py", line 34, in model
+    cache=cache,
+          ^^^^^
+NameError: name 'cache' is not defined

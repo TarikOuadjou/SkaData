@@ -1,0 +1,2 @@
+[Job 80] Running with theta: {'ALPHA_STAR': np.float64(0.2393055842258036), 'F_STAR10': np.float64(-0.704536646604538), 'F_ESC10': np.float64(-1.1548334248363972), 'ALPHA_ESC': np.float64(-0.26625335263088346), 'M_TURN': np.float64(9.916483625769615), 't_STAR': np.float64(0.2892073877155781), 'X_RAY_SPEC_INDEX': np.float64(1.3997255214489996)}
+[Job 80] FAILED: File close failed (slist already enabled?)

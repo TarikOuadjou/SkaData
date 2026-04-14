@@ -1,0 +1,3 @@
+[Job 9] Running with theta: {'ALPHA_STAR': np.float64(0.8106045569293201), 'F_STAR10': np.float64(-1.9218850890174508), 'F_ESC10': np.float64(-0.8419186696410179), 'ALPHA_ESC': np.float64(-0.16274879546836019), 'M_TURN': np.float64(8.66127484664321), 't_STAR': np.float64(0.14885019976645708), 'X_RAY_SPEC_INDEX': np.float64(0.8023287556134164)}
+[Job 9] FAILED: [Errno 122] Can't synchronously write data (file write failed: time = Mon Apr 13 18:18:05 2026
+, filename = '/gpfs/workdir/ouadjout/cache/job_0009/e0c832e29d3ab2bdda74c9e8f68a8c50/1234/InitialConditions.h5', file descriptor = 4, errno = 122, error message = 'Disk quota exceeded', buf = 0x14881cd45010, total write size = 4630500000, bytes this sub-write = 4630500000, offset = 5831012288)

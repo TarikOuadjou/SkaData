@@ -1,0 +1,5 @@
+[Job 36] Running with theta: {'ALPHA_STAR': np.float64(-0.3673268570564687), 'F_STAR10': np.float64(-0.195900016464293), 'F_ESC10': np.float64(0.4596296362578869), 'ALPHA_ESC': np.float64(-0.34755459893494844), 'M_TURN': np.float64(8.235066087916493), 't_STAR': np.float64(0.23126519285142422), 'X_RAY_SPEC_INDEX': np.float64(0.9462665128521621)}
+Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:05… • 0:00:… remaining
+          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:10… • 0:00:… remaining
+   Evolving Astrophysics ━      24% •  4/17 redshifts • 0:04… • -:--:… remaining
+[Job 36] FAILED: Unable to synchronously open file (bad object header version number)
