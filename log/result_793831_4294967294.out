@@ -1,0 +1,20 @@
+Generating training set...
+Generating validation set...
+  Redshift bins  : [(8.41, 7.56), (7.56, 6.85), (6.85, 6.25)]
+  Bin midpoints  : [7.985, 7.205, 6.55]
+
+  train thetas : torch.Size([2000, 6])   min=0.000 max=1.000
+  train ps2d   : torch.Size([2000, 3, 10, 10])
+  train xhi    : torch.Size([2000, 3])    min=0.000 max=0.974
+
+  val thetas   : torch.Size([400, 6])
+  val ps2d     : torch.Size([400, 3, 10, 10])
+  val xhi      : torch.Size([400, 3])
+
+Physical parameter ranges in training set:
+  ALPHA_STAR    [-0.500, +0.999]   prior [-0.5, 1.0]
+  F_STAR10      [-2.999, -0.001]   prior [-3.0, 0.0]
+  F_ESC10       [-2.999, +1.000]   prior [-3.0, 1.0]
+  ALPHA_ESC     [-0.999, +0.499]   prior [-1.0, 0.5]
+  M_TURN        [+8.000, +9.999]   prior [8.0, 10.0]
+  t_STAR        [+0.000, +1.000]   prior [0.0, 1.0]

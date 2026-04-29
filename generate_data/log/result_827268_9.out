@@ -1,0 +1,5 @@
+[Job 9] Running with theta: {'ALPHA_STAR': 0.5, 'F_STAR10': -1.3, 'F_ESC10': -1.0, 'ALPHA_ESC': -0.5, 'M_TURN': 8.7, 't_STAR': 0.5}
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.390)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.561)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.714)
+[Job 9] Done successfully.

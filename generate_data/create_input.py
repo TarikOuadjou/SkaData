@@ -34,9 +34,8 @@ def compute_input_params(theta, seed = 1234,box_len=700, hiidim=350):
         ALPHA_ESC=theta['ALPHA_ESC'],
         M_TURN=theta['M_TURN'],
         t_STAR=theta['t_STAR'],
-        X_RAY_SPEC_INDEX = theta['X_RAY_SPEC_INDEX'],
-        NU_X_BAND_MAX=2000.0, # Max of the band, don't moove this one ! 
     )
+    
     inputs = p21c.InputParameters(
         cosmo_params=cosmo_params,
         astro_options=astro_options,

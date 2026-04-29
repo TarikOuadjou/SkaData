@@ -1,5 +1,0 @@
-[Job 120] Running with theta: {'ALPHA_STAR': np.float64(-0.052607838064432144), 'F_STAR10': np.float64(-0.4672712981700897), 'F_ESC10': np.float64(-2.8540562577545643), 'ALPHA_ESC': np.float64(0.4522819621488452), 'M_TURN': np.float64(8.081715628504753), 't_STAR': np.float64(0.8824869198724627), 'X_RAY_SPEC_INDEX': np.float64(1.188919210806489)}
-Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:05… • 0:00:… remaining
-          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:10… • 0:00:… remaining
-   Evolving Astrophysics ━      24% •  4/17 redshifts • 0:05… • -:--:… remaining
-[Job 120] FAILED: File close failed (slist already enabled?)

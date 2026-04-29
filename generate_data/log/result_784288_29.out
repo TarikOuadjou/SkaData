@@ -1,0 +1,3 @@
+[Job 29] Running with theta: {'ALPHA_STAR': np.float64(0.3093477818183601), 'F_STAR10': np.float64(-1.6069442918524146), 'F_ESC10': np.float64(-1.255411945283413), 'ALPHA_ESC': np.float64(-0.0642592329531908), 'M_TURN': np.float64(8.874535076320171), 't_STAR': np.float64(0.8480696547776461)}
+[Job 29] FAILED: For runs with inhomogeneous recombinations or spin temperature fluctuations,
+your maximum passed node_redshifts 8.60949993563429 must be above Z_HEAT_MAX 35.0

@@ -162,7 +162,7 @@ def log_likelihood(y_true, y_pred):
     return exponent   
 
 def log_posterior(theta, y_true):
-    y_pred, x_h = model(theta)  # ton modèle
+    y_pred, x_h = model(theta) 
     y_pred = y_pred.flatten()
     likelihood = log_likelihood(y_true, y_pred)
     prior = log_prior(theta)
@@ -252,7 +252,7 @@ def run_convergence_test(theta_fixed):
             plt.colorbar(im, ax=ax, label="Relative Error [%]")
             
             ax.set_title(
-                f"bl={bl}, hd={hd} | {z_labels[zi]} | {t_str}\n"
+                f"L={bl}, N={hd} | {z_labels[zi]} | {t_str}\n"
                 f"mean={errors[key][zi]:.1%}  max={errors_max[key][zi]:.1%}",
                 fontsize=10
             )
@@ -261,7 +261,7 @@ def run_convergence_test(theta_fixed):
 
     ref_t = f"{timings[ref_key]/60:.1f} min"
     fig.suptitle(
-        f"Relative Error vs Reference Power Spectrum (bl=700, hd=350, {ref_t})",
+        f"Relative Error vs Reference Power Spectrum (L=700, N=350, {ref_t})",
         fontsize=13
     )
     

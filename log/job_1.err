@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/gpfs/users/ouadjout/skadatachallenge/scripts/run_one.py", line 5, in <module>
-    from generate_data.model import model
-ModuleNotFoundError: No module named 'generate_data'

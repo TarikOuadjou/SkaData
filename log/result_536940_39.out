@@ -1,2 +1,0 @@
-[Job 39] Running with theta: {'ALPHA_STAR': np.float64(-0.1059270491823554), 'F_STAR10': np.float64(-1.5799749987199903), 'F_ESC10': np.float64(-2.1227602250874043), 'ALPHA_ESC': np.float64(0.17181417252868414), 'M_TURN': np.float64(8.562501711770892), 't_STAR': np.float64(0.2987201912328601), 'X_RAY_SPEC_INDEX': np.float64(1.9465406029485166)}
-[Job 39] FAILED: [Errno 11] Unable to synchronously create file (unable to lock file, errno = 11, error message = 'Resource temporarily unavailable')

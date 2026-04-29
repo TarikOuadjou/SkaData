@@ -5,6 +5,10 @@ build/
 dist/
 wheels/
 *.egg-info
-
+low_generate_data/log/
+low_generate_data/results/
+generated_data/log/
+results/
 # Virtual environments
 .venv
+.npy

@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/inference.py", line 28, in <module>
+    main()
+    ~~~~^^
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/inference.py", line 15, in main
+    model = train(
+        train_thetas,
+    ...<7 lines>...
+        checkpoint_dir="checkpoints",
+    )
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/train.py", line 50, in train
+    torch.save(model.state_dict(), f"{checkpoint_dir}/emulator.pt")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/torch/serialization.py", line 1003, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+         ~~~~~~~~~~~~~~~~~~~~^^^
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/torch/serialization.py", line 865, in _open_zipfile_writer
+    return container(name_or_buffer)  # type: ignore[arg-type]
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/torch/serialization.py", line 829, in __init__
+    torch._C.PyTorchFileWriter(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.name, get_crc32_options(), _get_storage_alignment()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+RuntimeError: Parent directory checkpoints does not exist.

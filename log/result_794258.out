@@ -1,0 +1,29 @@
+Generating datasets...
+
+Training emulator...
+epoch   50/300  loss=0.004442
+epoch  100/300  loss=0.028458
+epoch  150/300  loss=0.011718
+epoch  200/300  loss=0.002397
+epoch  250/300  loss=0.001773
+epoch  300/300  loss=0.001723
+Model saved → emulator/checkpoints/emulator.pt
+
+Evaluating on test set...
+
+── PS2D metrics (flattened 10×10 per sample) ─────────────────────
+  bin                       RMSE         MAE        R²
+  z=[8.41,7.56]          0.03163     0.02470    1.0000
+  z=[7.56,6.85]          0.03062     0.02432    1.0000
+  z=[6.85,6.25]          0.03005     0.02396    1.0000
+
+── xHI metrics ───────────────────────────────────────────────────
+  bin                       RMSE         MAE        R²
+  z=[8.41,7.56]          0.03000     0.02418    0.8953
+  z=[7.56,6.85]          0.02969     0.02394    0.9018
+  z=[6.85,6.25]          0.02410     0.01682    0.8854
+  Saved → eval_scatter.png
+  Saved → eval_residuals.png
+  Saved → eval_ps2d_maps.png
+
+Done.

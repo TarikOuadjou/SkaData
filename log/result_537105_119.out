@@ -1,6 +1,0 @@
-[Job 119] Running with theta: {'ALPHA_STAR': np.float64(-0.012333163525909185), 'F_STAR10': np.float64(-1.7494051130488515), 'F_ESC10': np.float64(-0.9959356971085072), 'ALPHA_ESC': np.float64(0.07473474508151412), 'M_TURN': np.float64(9.883145021274686), 't_STAR': np.float64(0.8181713465601206), 'X_RAY_SPEC_INDEX': np.float64(1.79960764804855)}
-Perturbing Matter Fields ━━━━━ 100% • 17/17 redshifts • 0:05… • 0:00:… remaining
-          Evolving Halos ━━━━━ 100% • 17/17 redshifts • 0:10… • 0:00:… remaining
-   Evolving Astrophysics ╸      18% •  3/17 redshifts • 0:04… • -:--:… remaining
-[Job 119] FAILED: [Errno 122] Can't synchronously write data (file write failed: time = Mon Apr 13 11:06:51 2026
-, filename = '/gpfs/workdir/ouadjout/cache/e0c832e29d3ab2bdda74c9e8f68a8c50/1234/64b2f2d6f6d353660886c73de45d49d1/8.0552/ffffd75d1aae21e8bed753b80d4abbd0/IonizedBox.h5', file descriptor = 4, errno = 122, error message = 'Disk quota exceeded', buf = 0x152a85c71010, total write size = 171500000, bytes this sub-write = 171500000, offset = 514510240)

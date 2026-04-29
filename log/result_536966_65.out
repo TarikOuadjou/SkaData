@@ -1,2 +1,0 @@
-[Job 65] Running with theta: {'ALPHA_STAR': np.float64(0.8375793346203864), 'F_STAR10': np.float64(-1.566237011924386), 'F_ESC10': np.float64(-0.47069260478019714), 'ALPHA_ESC': np.float64(-0.5717777507379651), 'M_TURN': np.float64(8.932015618309379), 't_STAR': np.float64(0.007552599534392357), 'X_RAY_SPEC_INDEX': np.float64(1.34753995295614)}
-[Job 65] FAILED: Unable to synchronously create file (file signature not found)

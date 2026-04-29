@@ -1,3 +1,0 @@
-[Job 20] Running with theta: {'ALPHA_STAR': np.float64(-0.4105721521191299), 'F_STAR10': np.float64(-0.6714203897863626), 'F_ESC10': np.float64(-2.2234778068959713), 'ALPHA_ESC': np.float64(-0.5144734852947295), 'M_TURN': np.float64(8.96723522618413), 't_STAR': np.float64(0.16469343286007643), 'X_RAY_SPEC_INDEX': np.float64(0.735265911091119)}
-Perturbing Matter Fields ━━━━   82% • 14/17 redshifts • 0:04… • -:--:… remaining
-[Job 20] FAILED: Unable to synchronously create group (name already exists)

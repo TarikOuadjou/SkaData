@@ -1,0 +1,10 @@
+Generating training set...
+Generating validation set...
+Training emulator...
+epoch   50/300  loss=0.005837
+epoch  100/300  loss=0.012164
+epoch  150/300  loss=0.003073
+epoch  200/300  loss=0.002749
+epoch  250/300  loss=0.001762
+epoch  300/300  loss=0.001720
+Model saved → checkpoints/emulator.pt

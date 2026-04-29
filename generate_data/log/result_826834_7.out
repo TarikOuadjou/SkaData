@@ -1,0 +1,5 @@
+[Job 7] Running with theta: {'ALPHA_STAR': np.float64(-0.03844648273661733), 'F_STAR10': np.float64(-2.9898821292445064), 'F_ESC10': np.float64(-0.6535440199077129), 'ALPHA_ESC': np.float64(-0.715791751164943), 'M_TURN': np.float64(8.895528323948383), 't_STAR': np.float64(0.681463934481144)}
+PS calculé pour z=7.56-8.41 (Profondeur: 248.0 Mpc), x_HI_mean=0.046)
+PS calculé pour z=6.85-7.56 (Profondeur: 238.0 Mpc), x_HI_mean=0.066)
+PS calculé pour z=6.25-6.85 (Profondeur: 226.0 Mpc), x_HI_mean=0.084)
+[Job 7] Done successfully.

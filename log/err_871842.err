@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/data_loader.py", line 55, in <module>
+    print(f"theta[0]     : {thetas[0]}")
+                            ~~~~~~^^^
+IndexError: index 0 is out of bounds for dimension 0 with size 0

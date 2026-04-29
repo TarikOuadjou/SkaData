@@ -1,0 +1,2 @@
+[Job 16] Running with theta: {'ALPHA_STAR': np.float64(0.20745296077802777), 'F_STAR10': np.float64(-0.8375150486826897), 'F_ESC10': np.float64(-0.7591228187084198), 'ALPHA_ESC': np.float64(-0.2065437687560916), 'M_TURN': np.float64(8.112732933834195), 't_STAR': np.float64(0.20031308103352785)}
+[Job 16] FAILED: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'

@@ -20,11 +20,8 @@ def adding_instrumental_noise(ps2d_list):
         ps2d_list[i] += data_average_noise
     return ps2d_list
 
-def model(theta,box_len=700, hiidim=350,cache_dir=cache_path):
-    cache = p21c.OutputCache(cache_dir)
-    output_dir = "results_simu"
-    os.makedirs(output_dir, exist_ok=True)
-    inputs = compute_input_params(theta, seed=1234, box_len=box_len, hiidim=hiidim)
+def model(theta,box_len=700, hiidim=350,cache_dir=cache_path,seed = 1234):
+    inputs = compute_input_params(theta, seed=seed, box_len=box_len, hiidim=hiidim)
     lcn = p21c.RectilinearLightconer.between_redshifts(
         min_redshift=6.25,
         max_redshift=8.41,
@@ -36,8 +33,9 @@ def model(theta,box_len=700, hiidim=350,cache_dir=cache_path):
     lightcone = p21c.run_lightcone(
         lightconer=lcn,
         inputs=inputs,  
-        cache=cache,
-        progressbar=False
+        #cache=cache,
+        progressbar=False,
+        write = False,
     )
 
     # Tes paliers de redshift
@@ -67,8 +65,7 @@ def model(theta,box_len=700, hiidim=350,cache_dir=cache_path):
         kperp_list.append(kperp)
         kpar_list.append(kpar)
         xH_box = lightcone.lightcones["neutral_fraction"][:, :, indices]
-        np.savez(f"{output_dir}/data_z_{z_min:.2f}-{z_max:.2f}.npz", ps2d=ps2d, kperp=kperp, kpar=kpar)
-        x_HI_mean = np.mean(1-xH_box)
+        x_HI_mean = np.mean(1 - xH_box)
         print(f"PS calculé pour z={z_min:.2f}-{z_max:.2f} (Profondeur: {depth_mpc:.1f} Mpc), x_HI_mean={x_HI_mean:.3f})")
         x_HI_mean_list.append(x_HI_mean)
     ps2d_list = adding_instrumental_noise(ps2d_list)
