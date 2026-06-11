@@ -1,0 +1,3 @@
+True theta: [0.8707771  0.19218878 0.91673046 0.32236445 0.19743903 0.57577425]
+Log Likelihood at true theta: 1970.9556619109894
+No theta_init supplied — running MAP optimization...

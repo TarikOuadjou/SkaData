@@ -56,6 +56,7 @@ def model(theta,box_len=256, hiidim=128,cache_dir=cache_path,seed = 1234):
         depth_mpc = np.abs(dist_max - dist_min).value
         h = lightcone.cosmo_params.hlittle  
         box_dims = (lightcone.simulation_options.BOX_LEN*h, lightcone.simulation_options.BOX_LEN*h, depth_mpc*h)
+        print(f"Box volume : {box_dims[0]:.2e} x {box_dims[1]:.2e} x {box_dims[2]:.2e} = {box_dims[0]*box_dims[1]*box_dims[2]:.2e} Mpc^3")
         k_edges = np.arange(0.025, 0.575, 0.05)
         ps2d, kperp, kpar = t2c.power_spectrum_2d(
                     sub_box,
@@ -71,3 +72,13 @@ def model(theta,box_len=256, hiidim=128,cache_dir=cache_path,seed = 1234):
     ps2d_list = adding_instrumental_noise(ps2d_list)
     return np.array(ps2d_list), x_HI_mean_list
 
+def main():
+    theta_fid1 = {
+    'ALPHA_STAR': 0.5,
+    'F_STAR10':  -1.3,
+    'F_ESC10':   -1.0,
+    'ALPHA_ESC': -0.5,
+    'M_TURN':     8.7,   
+    't_STAR':     0.5,
+    }
+    ps2d_list, x_HI_mean_list = model(theta_fid1)

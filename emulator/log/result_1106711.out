@@ -1,0 +1,8 @@
+True theta: [0.8707771  0.19218878 0.91673046 0.32236445 0.19743903 0.57577425]
+No theta_init supplied — running MAP optimization...
+  restart 1/5  neg-log-post = 4101490.9302  success=False
+  restart 2/5  neg-log-post = 783.7482  success=True
+  restart 3/5  neg-log-post = 169337.6087  success=True
+  restart 4/5  neg-log-post = 111504.6350  success=False
+  restart 5/5  neg-log-post = -1530.8182  success=True
+MAP estimate: [0.7783835  0.19463871 1.         1.         0.15428949 0.68304895]  (neg-log-post = -1530.8182)

@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=mon_premier_job   # Nom de votre job
-#SBATCH --output=log/resultat_%j.out     # Fichier de sortie (%j = ID du job)
+#SBATCH --output=low_generate_data/log/resultat_%j.out     # Fichier de sortie (%j = ID du job)
 #SBATCH --nodes=1                  # 1 seul nœud (machine)
 #SBATCH --ntasks=1                   # Nombre de tâches
 #SBATCH --cpus-per-task=16         # Réserve 32 cœurs pour le multi-threading

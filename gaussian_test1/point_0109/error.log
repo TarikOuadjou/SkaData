@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/low_generate_data/gaussian_test.py", line 46, in run_point
+    np.save(os.path.join(point_dir, "ps2d.npy"), ps2d_list)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/numpy/lib/_npyio_impl.py", line 568, in save
+    file_ctx = open(file, "wb")
+OSError: [Errno 122] Disk quota exceeded: 'gaussian_test1/point_0109/ps2d.npy'

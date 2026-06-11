@@ -1,0 +1,50 @@
+True theta: [0.8707771  0.19218878 0.91673046 0.32236445 0.19743903 0.57577425]
+Log Likelihood at true theta: 1970.9556619109894
+No theta_init supplied — running MAP optimization...
+  restart  1/40  ll=1973.18  success=True
+  restart  2/40  ll=1974.21  success=True
+  restart  3/40  ll=1969.21  success=True
+  restart  4/40  ll=-628.55  success=True
+  restart  5/40  ll=-628.53  success=True
+  restart  6/40  ll=1970.76  success=True
+  restart  7/40  ll=-628.53  success=True
+  restart  8/40  ll=1974.10  success=True
+  restart  9/40  ll=-628.53  success=True
+  restart 10/40  ll=1974.28  success=True
+  restart 11/40  ll=1969.49  success=True
+  restart 12/40  ll=-2304.77  success=True
+  restart 13/40  ll=-628.53  success=False
+  restart 14/40  ll=229.64  success=True
+  restart 15/40  ll=-628.53  success=True
+  restart 16/40  ll=1974.22  success=True
+  restart 17/40  ll=-2683.70  success=True
+  restart 18/40  ll=1971.09  success=True
+  restart 19/40  ll=-566.63  success=True
+  restart 20/40  ll=1974.28  success=True
+  restart 21/40  ll=-628.53  success=True
+  restart 22/40  ll=-628.53  success=True
+  restart 23/40  ll=-628.53  success=True
+  restart 24/40  ll=-1631.74  success=True
+  restart 25/40  ll=-630.72  success=True
+  restart 26/40  ll=1972.81  success=True
+  restart 27/40  ll=-2771.04  success=True
+  restart 28/40  ll=-628.89  success=True
+  restart 29/40  ll=1974.14  success=True
+  restart 30/40  ll=-628.53  success=True
+  restart 31/40  ll=1970.60  success=True
+  restart 32/40  ll=-628.53  success=True
+  restart 33/40  ll=1973.91  success=True
+  restart 34/40  ll=1972.80  success=False
+  restart 35/40  ll=-628.53  success=True
+  restart 36/40  ll=-628.53  success=True
+  restart 37/40  ll=1973.53  success=True
+  restart 38/40  ll=1973.84  success=True
+  restart 39/40  ll=-2590.44  success=True
+  restart 40/40  ll=-628.53  success=True
+
+MAP : [0.91756919 1.         0.1856138  0.97272609 0.11508622 1.        ]
+ll  : 1974.2812
+Running burn-in (1000 steps, 32 walkers)...
+Running production (5000 steps)...
+Autocorrelation times: {'ALPHA_STAR': np.float64(271.8), 'F_STAR10': np.float64(279.0), 'F_ESC10': np.float64(280.3), 'ALPHA_ESC': np.float64(255.2), 'M_TURN': np.float64(345.5), 't_STAR': np.float64(230.5)}
+Mean acceptance fraction: 40.43%

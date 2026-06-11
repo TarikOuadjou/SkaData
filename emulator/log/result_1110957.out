@@ -1,0 +1,13 @@
+True theta: [0.8707771  0.19218878 0.91673046 0.32236445 0.19743903 0.57577425]
+Log Likelihood at true theta: 1970.9556619109894
+No theta_init supplied — running MAP optimization...
+  restart 1/5  neg-log-post = 4101490.9302  success=False
+  restart 2/5  neg-log-post = 783.7482  success=True
+  restart 3/5  neg-log-post = 169337.6087  success=True
+  restart 4/5  neg-log-post = 111504.6350  success=False
+  restart 5/5  neg-log-post = -1530.8182  success=True
+MAP estimate: [0.7783835  0.19463871 1.         1.         0.15428949 0.68304895]  (neg-log-post = -1530.8182)
+Running burn-in (1000 steps, 32 walkers)...
+Running production (5000 steps)...
+Autocorrelation times: {'ALPHA_STAR': np.float64(520.3), 'F_STAR10': np.float64(528.3), 'F_ESC10': np.float64(525.4), 'ALPHA_ESC': np.float64(375.6), 'M_TURN': np.float64(434.8), 't_STAR': np.float64(338.1)}
+Mean acceptance fraction: 26.47%

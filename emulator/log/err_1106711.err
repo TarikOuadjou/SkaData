@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/sigma_model/get_distrib.py", line 188, in <module>
+    main()
+    ~~~~^^
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/sigma_model/get_distrib.py", line 170, in main
+    results = run_mcmc(
+        model, scalers, test_ps2d_obs,
+    ...<4 lines>...
+        init_noise_pct=0.02,   # ±2 % of prior width per parameter
+    )
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/sigma_model/get_distrib.py", line 124, in run_mcmc
+    n_walkers, N_DIM, log_prob, args=(model, scalers, y_obs)
+                      ^^^^^^^^
+NameError: name 'log_prob' is not defined. Did you mean: 'log_prior'?

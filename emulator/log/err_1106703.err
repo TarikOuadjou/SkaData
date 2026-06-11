@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/sigma_model/get_distrib.py", line 158, in <module>
+    main()
+    ~~~~^^
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/sigma_model/get_distrib.py", line 126, in main
+    model          = load_emulator()
+                     ^^^^^^^^^^^^^
+NameError: name 'load_emulator' is not defined

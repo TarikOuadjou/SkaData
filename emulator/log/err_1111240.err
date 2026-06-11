@@ -1,0 +1,46 @@
+Traceback (most recent call last):
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/sigma_model/get_distrib.py", line 241, in <module>
+    main()
+    ~~~~^^
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/sigma_model/get_distrib.py", line 223, in main
+    results = run_mcmc(
+        model, scalers, test_ps2d_obs,
+    ...<4 lines>...
+        init_noise_pct=0.02,   # ±2 % of prior width per parameter
+    )
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/sigma_model/get_distrib.py", line 124, in run_mcmc
+    theta_init = find_map_estimate(model, scalers, y_obs, seed=seed)
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/sigma_model/get_distrib.py", line 91, in find_map_estimate
+    result = minimize(
+        neg_log_prob_with_grad,
+    ...<5 lines>...
+        options={"maxiter": 1000, "ftol": 1e-12, "gtol": 1e-8},
+    )
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/scipy/optimize/_minimize.py", line 784, in minimize
+    res = _minimize_lbfgsb(fun, x0, args, jac, bounds,
+                           callback=callback, **options)
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/scipy/optimize/_lbfgsb_py.py", line 413, in _minimize_lbfgsb
+    sf = _prepare_scalar_function(fun, x0, jac=jac, args=args, epsilon=eps,
+                                  bounds=bounds,
+                                  finite_diff_rel_step=finite_diff_rel_step,
+                                  workers=workers)
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/scipy/optimize/_optimize.py", line 310, in _prepare_scalar_function
+    sf = ScalarFunction(fun, x0, args, grad, hess,
+                        finite_diff_rel_step, bounds, epsilon=epsilon,
+                        workers=workers)
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/scipy/optimize/_differentiable_functions.py", line 283, in __init__
+    self._update_fun()
+    ~~~~~~~~~~~~~~~~^^
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/scipy/optimize/_differentiable_functions.py", line 362, in _update_fun
+    fx = self._wrapped_fun(self.x)
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/scipy/_lib/_util.py", line 603, in __call__
+    fx = self.f(np.copy(x), *self.args)
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/scipy/optimize/_optimize.py", line 80, in __call__
+    self._compute_if_needed(x, *args)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/gpfs/users/ouadjout/skadatachallenge/.venv/lib/python3.13/site-packages/scipy/optimize/_optimize.py", line 74, in _compute_if_needed
+    fg = self.fun(x, *args)
+  File "/gpfs/users/ouadjout/skadatachallenge/emulator/sigma_model/get_distrib.py", line 195, in neg_log_prob_with_grad
+    mu_nat    = ps_mu_log10.flatten()    * math.log(10)
+                                           ^^^^
+NameError: name 'math' is not defined. Did you forget to import 'math'?

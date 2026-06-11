@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "21cmfast>=4.1.0",
+    "emcee>=3.1.6",
     "ipykernel>=7.2.0",
     "seaborn>=0.13.2",
     "tools21cm>=2.3.10",
