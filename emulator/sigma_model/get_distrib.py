@@ -84,7 +84,7 @@ def find_map_estimate(
     rng     = np.random.default_rng(seed)
     bounds  = list(zip(PRIOR_BOUNDS[:, 0], PRIOR_BOUNDS[:, 1]))
     y_obs_t = torch.tensor(y_obs, dtype=torch.float32)
-
+    '''scipy.optimize.differential_evolution'''
     best_val, best_theta = np.inf, None
 
     for i in range(n_restarts):

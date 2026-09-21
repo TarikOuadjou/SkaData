@@ -3,27 +3,23 @@ import torch
 import numpy as np
 import emcee
 import math
-import glob
-from emulator.basic_model.model import Emulator21cm, run_inference
-from emulator.data_loader import PARAM_NAMES, N_Z
+from emulator.sigma_model_no_log.model_prob import Emulator21cm, run_inference
+from emulator.data_loader import PARAM_NAMES, N_Z, PARAM_RANGES
 
-CHECKPOINT_DIR  = "emulator/basic_model/checkpoints"
-PARAM_NAMES     = ['ALPHA_STAR', 'F_STAR10', 'F_ESC10', 'ALPHA_ESC', 'M_TURN', 't_STAR']
-N_DIM           = len(PARAM_NAMES)
-PRIOR_BOUNDS    = np.array([(0.0, 1.0) for _ in PARAM_NAMES])
+CHECKPOINT_DEFAULT = "checkpoints/emulator.pt"
+PARAM_NAMES = ['ALPHA_STAR', 'F_STAR10', 'F_ESC10', 'ALPHA_ESC', 'M_TURN', 't_STAR']
 
-# ── Fixed observational sigma (shape: 300,) ───────────────────────────────────
-SIGMA_OBS = np.concatenate([
-    np.loadtxt(f).flatten()
-    for f in sorted(glob.glob("PS1_PS2_Data/err_Pk_PS1_*.txt"))
-])  # (300,)
+PRIOR_BOUNDS = np.array([
+    (0.0, 1.0)
+    for _ in PARAM_NAMES
+])
+
+N_DIM = len(PARAM_NAMES)
 
 
 def load_emulator():
     model = Emulator21cm(n_params=6, n_redshifts=N_Z)
-    model.load_state_dict(torch.load(
-        f"{CHECKPOINT_DIR}/emulator.pt", map_location="cpu"
-    ))
+    model.load_state_dict(torch.load('emulator/sigma_model_no_log/' + CHECKPOINT_DEFAULT, map_location="cpu"))
     return model
 
 
@@ -32,75 +28,108 @@ def log_prior(theta: np.ndarray) -> float:
     return 0.0 if np.all(theta >= lo) and np.all(theta <= hi) else -np.inf
 
 
-def log_likelihood_chi2(
-    x_obs: np.ndarray,
-    mu:    np.ndarray,
-    sigma: np.ndarray,
+def log_likelihood_gaussian(
+    x_obs:  np.ndarray,
+    mu:     np.ndarray,
+    sigma:  np.ndarray,
 ) -> float:
+    """
+    Gaussian log-likelihood:
+      ll = -0.5 * sum[ log(2π) + 2*log(σ) + ((x - μ)/σ)² ]
+    """
     x_obs = np.asarray(x_obs, dtype=np.float64)
     mu    = np.asarray(mu,    dtype=np.float64)
     sigma = np.asarray(sigma, dtype=np.float64)
-    return float(-0.5 * np.sum(((x_obs - mu) / sigma) ** 2))
+
+    return float(np.sum(
+        - 0.5 * np.log(2 * np.pi)
+        #- np.log(sigma)
+        - 0.5 * ((x_obs - mu) / sigma) ** 2
+    ))
 
 
 def log_prob(theta, model, scalers, y_obs):
     lp = log_prior(theta)
     if not np.isfinite(lp):
         return -np.inf
-    ps2d_pred, _ = run_inference(model, theta, scalers=scalers)
-    ll = log_likelihood_chi2(
+    ps2d_pred, _, ps2d_sigma_pred = run_inference(model, theta, scalers=scalers)
+    ll = log_likelihood_gaussian(
         y_obs,
         ps2d_pred.numpy().flatten(),
-        SIGMA_OBS,
+        ps2d_sigma_pred.numpy().flatten(),
     )
     return lp + ll
 
 
 def diagnose_map(model, scalers, y_obs, theta_true, theta_map):
-    ps_true, _ = run_inference(model, theta_true, scalers=scalers)
-    ps_map,  _ = run_inference(model, theta_map,  scalers=scalers)
+    ps_true, _, ps_sig_true = run_inference(model, theta_true, scalers=scalers)
+    ps_map,  _, ps_sig_map  = run_inference(model, theta_map,  scalers=scalers)
 
-    ll_true = log_likelihood_chi2(y_obs, ps_true.numpy().flatten(), SIGMA_OBS)
-    ll_map  = log_likelihood_chi2(y_obs, ps_map.numpy().flatten(),  SIGMA_OBS)
+    ll_true = log_likelihood_gaussian(y_obs, ps_true.numpy().flatten(), ps_sig_true.numpy().flatten())
+    ll_map  = log_likelihood_gaussian(y_obs, ps_map.numpy().flatten(),  ps_sig_map.numpy().flatten())
 
     print(f"ll at true theta : {ll_true:.2f}")
     print(f"ll at MAP theta  : {ll_map:.2f}")
-    print(f"delta            : {ll_map - ll_true:.2f}  (should be >= 0)")
+    print(f"delta            : {ll_map - ll_true:.2f}  (should be > 0)")
 
 
-# ── Differentiable forward pass ───────────────────────────────────────────────
+# ── Differentiable forward pass (keeps grad graph for L-BFGS-B) ──────────────
 
 def run_inference_differentiable(model, theta, scalers):
+    """
+    Same logic as run_inference but without torch.no_grad(),
+    so autograd can differentiate through theta.
+    """
     if theta.dim() == 1:
         theta = theta.unsqueeze(0)
 
     ps_mean = torch.tensor(scalers["ps_mean"], dtype=theta.dtype)
     ps_std  = torch.tensor(scalers["ps_std"],  dtype=theta.dtype)
 
-    ps2d_scaled, _ = model(theta)
-    ps2d_pred = ps2d_scaled * ps_std + ps_mean   # linear space, no 10**
+    ps2d_mu, ps2d_sigma, _ = model(theta)
 
-    return ps2d_pred.flatten()
+    ps2d_pred       = ps2d_mu    * ps_std + ps_mean
+    ps2d_sigma_pred = ps2d_sigma * ps_std
+
+    return ps2d_pred.flatten(), ps2d_sigma_pred.flatten()
 
 
-def neg_log_prob_with_grad(theta_np, model, scalers, y_obs_t, sigma_t):
+def neg_log_prob_with_grad(theta_np, model, scalers, y_obs_t):
     """Returns (scalar, gradient) for scipy L-BFGS-B."""
     theta = torch.tensor(theta_np, dtype=torch.float32, requires_grad=True)
 
-    mu = run_inference_differentiable(model, theta, scalers)
-    ll = (-0.5 * ((y_obs_t - mu) / sigma_t) ** 2).sum()
+    mu, sigma = run_inference_differentiable(model, theta, scalers)
+
+    ll = (
+        - 0.5 * math.log(2 * math.pi)
+        #- torch.log(sigma)
+        - 0.5 * ((y_obs_t - mu) / sigma) ** 2
+    ).sum()
 
     (-ll).backward()
+
     return (-ll).item(), theta.grad.numpy().astype(np.float64)
+
+
+def neg_log_prob(theta, model, scalers, y_obs):
+    lp = log_prior(theta)
+    if not np.isfinite(lp):
+        return np.inf
+    ps2d_pred, _, ps2d_sigma_pred = run_inference(model, theta, scalers=scalers)
+    ll = log_likelihood_gaussian(
+        y_obs,
+        ps2d_pred.numpy().flatten(),
+        ps2d_sigma_pred.numpy().flatten(),
+    )
+    return -(lp + ll)
 
 
 # ── MAP ───────────────────────────────────────────────────────────────────────
 
 def find_map_estimate(model, scalers, y_obs, n_restarts=40, seed=42):
-    rng     = np.random.default_rng(seed)
-    bounds  = list(zip(PRIOR_BOUNDS[:, 0], PRIOR_BOUNDS[:, 1]))
-    y_obs_t = torch.tensor(y_obs,    dtype=torch.float32)
-    sigma_t = torch.tensor(SIGMA_OBS, dtype=torch.float32)
+    rng    = np.random.default_rng(seed)
+    bounds = list(zip(PRIOR_BOUNDS[:, 0], PRIOR_BOUNDS[:, 1]))
+    y_obs_t = torch.tensor(y_obs, dtype=torch.float32)
 
     best_val, best_theta = np.inf, None
 
@@ -109,7 +138,7 @@ def find_map_estimate(model, scalers, y_obs, n_restarts=40, seed=42):
         result = minimize(
             neg_log_prob_with_grad,
             theta0,
-            args=(model, scalers, y_obs_t, sigma_t),
+            args=(model, scalers, y_obs_t),
             method="L-BFGS-B",
             jac=True,
             bounds=bounds,
@@ -130,12 +159,12 @@ def run_mcmc(
     model,
     scalers,
     y_obs,
-    n_walkers   = 32,
-    n_steps     = 5_000,
-    burn_in     = 1_000,
-    seed        = 42,
-    theta_init  = None,
-    init_noise_pct = 0.02,
+    n_walkers=32,
+    n_steps=5_000,
+    burn_in=1_000,
+    seed=42,
+    theta_init=None,
+    init_noise_pct=0.02,
 ):
     rng = np.random.default_rng(seed)
 
@@ -144,7 +173,8 @@ def run_mcmc(
         theta_init = find_map_estimate(model, scalers, y_obs, seed=seed)
 
     prior_width = PRIOR_BOUNDS[:, 1] - PRIOR_BOUNDS[:, 0]
-    p0 = theta_init + init_noise_pct * prior_width * rng.standard_normal((n_walkers, N_DIM))
+    sigma = init_noise_pct * prior_width
+    p0 = theta_init + sigma * rng.standard_normal((n_walkers, N_DIM))
     p0 = np.clip(p0, PRIOR_BOUNDS[:, 0] + 1e-6, PRIOR_BOUNDS[:, 1] - 1e-6)
 
     sampler = emcee.EnsembleSampler(
@@ -183,33 +213,34 @@ def run_mcmc(
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 def main():
-    model   = load_emulator()
-    scalers = np.load(f"{CHECKPOINT_DIR}/scalers.npz")
-
-    split       = torch.load(f"{CHECKPOINT_DIR}/dataset_split.pt")
+    model          = load_emulator()
+    checkpoint_dir = "emulator/sigma_model_no_log/checkpoints"
+    scalers        = np.load(f"{checkpoint_dir}/scalers.npz")
+    split       = torch.load(f"{checkpoint_dir}/dataset_split.pt")
     test_thetas = split["test_thetas"]
     test_ps2d   = split["test_ps2d"]
+    theta_obs     = np.array([0.86666667, 0.73333333, 0.575     , 0.46666666, 0.        ,0.30000001])
+    y_obs, xhi_cur, ps2d_sigma_cur = run_inference(model, theta_obs, scalers=scalers)
+    y_obs = y_obs.numpy().flatten()
+    print(xhi_cur.numpy())
+    print("True theta:", theta_obs)
+    print("Log-likelihood at true theta:", log_prob(theta_obs, model, scalers, y_obs))
+    results = run_mcmc(
+        model, scalers, y_obs,
+        n_walkers=8,
+       n_steps=10_000,
+        burn_in=1_000,
+        seed=412,
+        init_noise_pct=0.1,
+    )
 
-    theta_obs = test_thetas[2].numpy()
-    # Use emulator prediction as y_obs (clean test with no noise)
-    #y_obs = run_inference(model, theta_obs, scalers=scalers)[0].numpy().flatten()
-    y_obs = test_ps2d[2].numpy().flatten()
-    print("True theta :", theta_obs)
-    print("Log-likelihood at true theta :", log_prob(theta_obs, model, scalers, y_obs))
-
-    theta_MAP = find_map_estimate(model, scalers, y_obs, n_restarts=40, seed=123)
-    diagnose_map(model, scalers, y_obs, theta_obs, theta_MAP)
-
-    # results = run_mcmc(
-    #     model, scalers, y_obs,
-    #     n_walkers=32, n_steps=20_000, burn_in=2_000,
-    #     seed=412, theta_init=theta_MAP, init_noise_pct=0.02,
-    # )
-    # np.savez(
-    #     f"{CHECKPOINT_DIR}/mcmc_results.npz",
-    #     chain=results["chain"], posterior=results["posterior"],
-    #     log_post=results["log_post"], accept_rate=results["accept_rate"],
-    # )
+    np.savez(
+        "emulator/sigma_model_no_log/mcmc_results.npz",
+        chain=results["chain"],
+        posterior=results["posterior"],
+        log_post=results["log_post"],
+        accept_rate=results["accept_rate"],
+    )
 
 
 if __name__ == "__main__":

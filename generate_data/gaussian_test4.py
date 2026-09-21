@@ -54,16 +54,16 @@ def is_done(point_dir):
     return os.path.exists(os.path.join(point_dir, "done.flag"))
 
 def run_point(job_id):
-    theta = theta_early
+    theta = theta_test
 
-    point_dir = f"gaussian_test2/point_{job_id:04d}"
+    point_dir = f"gaussian_test4/point_{job_id:04d}"
     os.makedirs(point_dir, exist_ok=True)
 
     # Skip if already done (useful for resubmissions)
     if is_done(point_dir):
         print(f"[Job {job_id}] Already done, skipping.")
         return
-    from low_generate_data.model import model
+    from generate_data.model import model
     # Save theta immediately for traceability
     np.save(os.path.join(point_dir, "theta.npy"), theta)
     

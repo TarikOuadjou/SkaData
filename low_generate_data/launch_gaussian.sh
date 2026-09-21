@@ -2,7 +2,7 @@
 #SBATCH --job-name=21cm_1024
 #SBATCH --output=low_generate_data/log/result_%j_%a.out
 #SBATCH --error=low_generate_data/log/err_%j_%a.err
-#SBATCH --array=999-1000%20      # 4096 points, max 10 en parallèle 
+#SBATCH --array=0-999%100      # 4096 points, max 10 en parallèle 
 #SBATCH --nodes=1
 #SBATCH --ntasks=1  
 #SBATCH --cpus-per-task=12
@@ -19,6 +19,6 @@ source /gpfs/users/ouadjout/skadatachallenge/.venv/bin/activate
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export PYTHONPATH=/gpfs/users/ouadjout/skadatachallenge:$PYTHONPATH
 
-python3 low_generate_data/gaussian_test2.py $SLURM_ARRAY_TASK_ID
+python3 low_generate_data/gaussian_test4.py $SLURM_ARRAY_TASK_ID
 
 rm -rf /gpfs/workdir/ouadjout/cache/job_$(printf "%04d" $SLURM_ARRAY_TASK_ID)

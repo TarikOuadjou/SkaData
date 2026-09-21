@@ -71,11 +71,14 @@ class Emulator21cm(nn.Module):
 
 
 def mse_loss(ps2d_pred, ps2d_target, xhi_pred, xhi_target,
-             w_ps: float = 1.0, w_xhi: float = 1.0) -> torch.Tensor:
-    loss_ps = F.mse_loss(ps2d_pred, ps2d_target)
-    loss_xhi = F.mse_loss(xhi_pred,  xhi_target)
+             w_ps: float = 1.0, w_xhi: float = 1.0,
+             sigma: torch.Tensor = None) -> torch.Tensor:
+    if sigma is not None:
+        loss_ps = torch.mean(((ps2d_pred - ps2d_target) / sigma) ** 2)
+    else:
+        loss_ps = F.mse_loss(ps2d_pred, ps2d_target)
+    loss_xhi = F.mse_loss(xhi_pred, xhi_target)
     return w_ps * loss_ps + w_xhi * loss_xhi
-
 def mse_loss_variance(ps2d_pred, ps2d_target, xhi_pred, xhi_target,
              w_ps: float = 1.0, w_xhi: float = 1.0, sigma: np.ndarray = None, scalers =None) -> torch.Tensor:
     if sigma is None:
@@ -91,20 +94,19 @@ def mse_loss_variance(ps2d_pred, ps2d_target, xhi_pred, xhi_target,
     sigma_tensor = torch.tensor(sigma, dtype=torch.float32).view(1, 3, 10, 10)
     loss_ps = torch.mean(((pred_phys - target_phys) / (sigma_tensor )) ** 2)    
     #loss_xhi = F.mse_loss(xhi_pred, xhi_target)
-    return w_ps * loss_ps #+ w_xhi * loss_xhi
+    return w_ps * loss_ps + w_xhi * loss_xhi
 
-def compute_scalers(
-    ps2d: torch.Tensor,   # (N, 3, 10, 10)
-):
-    log_ps = torch.log10(ps2d + 1e-30)                   # (N, 3, 10, 10)
-    ps_mean = log_ps.mean(dim=0, keepdim=True)           # (1, 3, 10, 10)
-    ps_std  = log_ps.std(dim=0, keepdim=True).clamp(min=1e-8)
-
+def compute_scalers(ps2d: torch.Tensor):
+    # Normalize in linear space directly
+    ps_mean = ps2d.mean(dim=0, keepdim=True)
+    ps_std  = ps2d.std(dim=0,  keepdim=True).clamp(min=1e-8)
     return ps_mean, ps_std
 
 
 def scale_ps(ps2d, ps_mean, ps_std):
-    return (torch.log10(ps2d + 1e-30) - ps_mean) / ps_std # maybe transform it to 0,1
+    # Linear normalization — no log
+    return (ps2d - ps_mean) / ps_std
+
 
 def train(
     train_thetas : torch.Tensor,
@@ -150,13 +152,14 @@ def train(
                 np.loadtxt(f).flatten()
                 for f in sorted(glob.glob("PS1_PS2_Data/err_Pk_PS1_*.txt"))
             ])
+    sigma_t = torch.tensor(sigma, dtype=torch.float32).view(1, 3, 10, 10)
     for epoch in range(1, epochs + 1):
         # ── Train ──
         model.train()
         epoch_loss = 0.0
         for theta_b, ps_b, xhi_b in loader:
             ps_pred, xhi_pred = model(theta_b)
-            loss = mse_loss(ps_pred, ps_b, xhi_pred, xhi_b, w_ps, w_xhi)
+            loss = mse_loss(ps_pred, ps_b, xhi_pred, xhi_b, w_ps, w_xhi, sigma=sigma_t)
             #loss = mse_loss_variance(ps_pred, ps_b, xhi_pred, xhi_b, w_ps, w_xhi, sigma=sigma, scalers={"ps_mean": ps_mean, "ps_std": ps_std})
             optimizer.zero_grad()
             loss.backward()
@@ -173,13 +176,8 @@ def train(
                 ps_val_pred, val_ps2d_scaled,
                 xhi_val_pred, val_xhi,
                 w_ps, w_xhi,
+                sigma=sigma_t
             ).item()
-            #val_loss = mse_loss_variance(
-            #    ps_val_pred, val_ps2d_scaled,
-            #    xhi_val_pred, val_xhi,
-            #    w_ps, w_xhi, sigma=sigma, scalers={"ps_mean": ps_mean, "ps_std": ps_std}
-            #).item()
-
         history["train_loss"].append(avg_train)     
         history["val_loss"].append(val_loss)        
 
@@ -194,22 +192,23 @@ def train(
 
 def run_inference(
     model: Emulator21cm,
-    theta: torch.Tensor,        # (N, 6) or (6,)
+    theta: torch.Tensor,
     checkpoint_dir: str = "emulator/basic_model/checkpoints",
-    scalers = None,
+    scalers=None,
 ) -> tuple[torch.Tensor, torch.Tensor]:
     if scalers is None:
-        scalers  = np.load(f"{checkpoint_dir}/scalers.npz")
+        scalers = np.load(f"{checkpoint_dir}/scalers.npz")
 
     if isinstance(theta, np.ndarray):
         theta = torch.tensor(theta, dtype=torch.float32)
     if theta.dim() == 1:
-        theta = theta.unsqueeze(0)   
-    
-    ps_mean  = torch.tensor(scalers["ps_mean"])  
-    ps_std   = torch.tensor(scalers["ps_std"])    
+        theta = theta.unsqueeze(0)
+
+    ps_mean = torch.tensor(scalers["ps_mean"])
+    ps_std  = torch.tensor(scalers["ps_std"])
+
     model.eval()
     with torch.no_grad():
         ps_pred_scaled, xhi_pred = model(theta)
-        ps_pred  = 10 ** (ps_pred_scaled * ps_std + ps_mean)   
-    return ps_pred.numpy(), xhi_pred.numpy()
+        ps_pred = ps_pred_scaled * ps_std + ps_mean   # ← no 10**
+    return ps_pred, xhi_pred

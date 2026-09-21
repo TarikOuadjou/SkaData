@@ -54,9 +54,9 @@ def is_done(point_dir):
     return os.path.exists(os.path.join(point_dir, "done.flag"))
 
 def run_point(job_id):
-    theta = theta_early
+    theta = theta_obs
 
-    point_dir = f"gaussian_test2/point_{job_id:04d}"
+    point_dir = f"gaussian_test3/point_{job_id:04d}"
     os.makedirs(point_dir, exist_ok=True)
 
     # Skip if already done (useful for resubmissions)

@@ -12,3 +12,8 @@ results/
 # Virtual environments
 .venv
 .npy
+*.err
+*.out
+*.png
+*.npz
+*.pt
