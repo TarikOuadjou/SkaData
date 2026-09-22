@@ -1,90 +1,136 @@
 from scipy.optimize import minimize
 import torch
 import numpy as np
-import glob
 import emcee
 import math
-from emulator.sigma_model.model_prob import Emulator21cm, run_inference
-from emulator.data_loader import PARAM_NAMES, Z_BINS, Z_MIDS, N_Z, PARAM_RANGES
+from emulator.sigma_model_no_log.model_prob import Emulator21cm, run_inference
+from emulator.data_loader import PARAM_NAMES, N_Z, PARAM_RANGES
+
 CHECKPOINT_DEFAULT = "checkpoints/emulator.pt"
 PARAM_NAMES = ['ALPHA_STAR', 'F_STAR10', 'F_ESC10', 'ALPHA_ESC', 'M_TURN', 't_STAR']
 
 PRIOR_BOUNDS = np.array([
     (0.0, 1.0)
-    for param in PARAM_NAMES
+    for _ in PARAM_NAMES
 ])
 
 N_DIM = len(PARAM_NAMES)
 
-def diagnose_map(model, scalers, y_obs, theta_true, theta_map):
-    _, _, _, mu_true, sig_true = run_inference(model, theta_true, scalers=scalers)
-    _, _, _, mu_map,  sig_map  = run_inference(model, theta_map,  scalers=scalers)
-
-    ll_true = log_likelihood_lognormal_log10(y_obs, mu_true.flatten(), sig_true.flatten())
-    ll_map  = log_likelihood_lognormal_log10(y_obs, mu_map.flatten(),  sig_map.flatten())
-
-    print(f"ll at true theta : {ll_true:.2f}")
-    print(f"ll at MAP theta  : {ll_map:.2f}")
-    print(f"delta            : {ll_map - ll_true:.2f}  (should be > 0)")
 
 def load_emulator():
     model = Emulator21cm(n_params=6, n_redshifts=N_Z)
-    model.load_state_dict(torch.load('emulator/sigma_model/' + CHECKPOINT_DEFAULT, map_location="cpu"))
+    model.load_state_dict(torch.load('emulator/sigma_model_no_log/' + CHECKPOINT_DEFAULT, map_location="cpu"))
     return model
+
 
 def log_prior(theta: np.ndarray) -> float:
     lo, hi = PRIOR_BOUNDS[:, 0], PRIOR_BOUNDS[:, 1]
     return 0.0 if np.all(theta >= lo) and np.all(theta <= hi) else -np.inf
 
 
-def log_likelihood_lognormal_log10(
-    x_obs: np.ndarray,
-    mu_log10: np.ndarray,
-    sigma_log10: np.ndarray,
-) -> float: 
-    x_obs       = np.asarray(x_obs,                        dtype=np.float64)
-    mu_log10    = np.asarray(mu_log10.detach().cpu(),      dtype=np.float64)
-    sigma_log10 = np.asarray(sigma_log10,                  dtype=np.float64)
-
-    mu_nat    = mu_log10    * np.log(10)
-    sigma_nat = sigma_log10 * np.log(10)
+def log_likelihood_gaussian(
+    x_obs:  np.ndarray,
+    mu:     np.ndarray,
+    sigma:  np.ndarray,
+) -> float:
+    """
+    Gaussian log-likelihood:
+      ll = -0.5 * sum[ log(2π) + 2*log(σ) + ((x - μ)/σ)² ]
+    """
+    x_obs = np.asarray(x_obs, dtype=np.float64)
+    mu    = np.asarray(mu,    dtype=np.float64)
+    sigma = np.asarray(sigma, dtype=np.float64)
 
     return float(np.sum(
-        - np.log(x_obs)
-        - np.log(sigma_nat)
-        - 0.5 * ((np.log(x_obs) - mu_nat) / sigma_nat) ** 2
+        - 0.5 * np.log(2 * np.pi)
+        #- np.log(sigma)
+        - 0.5 * ((x_obs - mu) / sigma) ** 2
     ))
+
 
 def log_prob(theta, model, scalers, y_obs):
     lp = log_prior(theta)
     if not np.isfinite(lp):
         return -np.inf
-    _, _, _, ps_mu_log10, ps_sigma_log10 = run_inference(model, theta, scalers=scalers)
-    ll = log_likelihood_lognormal_log10(y_obs, ps_mu_log10.flatten(), ps_sigma_log10.flatten())
+    ps2d_pred, _, ps2d_sigma_pred = run_inference(model, theta, scalers=scalers)
+    ll = log_likelihood_gaussian(
+        y_obs,
+        ps2d_pred.numpy().flatten(),
+        ps2d_sigma_pred.numpy().flatten(),
+    )
     return lp + ll
 
+
+def diagnose_map(model, scalers, y_obs, theta_true, theta_map):
+    ps_true, _, ps_sig_true = run_inference(model, theta_true, scalers=scalers)
+    ps_map,  _, ps_sig_map  = run_inference(model, theta_map,  scalers=scalers)
+
+    ll_true = log_likelihood_gaussian(y_obs, ps_true.numpy().flatten(), ps_sig_true.numpy().flatten())
+    ll_map  = log_likelihood_gaussian(y_obs, ps_map.numpy().flatten(),  ps_sig_map.numpy().flatten())
+
+    print(f"ll at true theta : {ll_true:.2f}")
+    print(f"ll at MAP theta  : {ll_map:.2f}")
+    print(f"delta            : {ll_map - ll_true:.2f}  (should be > 0)")
+
+
+# ── Differentiable forward pass (keeps grad graph for L-BFGS-B) ──────────────
+
+def run_inference_differentiable(model, theta, scalers):
+    """
+    Same logic as run_inference but without torch.no_grad(),
+    so autograd can differentiate through theta.
+    """
+    if theta.dim() == 1:
+        theta = theta.unsqueeze(0)
+
+    ps_mean = torch.tensor(scalers["ps_mean"], dtype=theta.dtype)
+    ps_std  = torch.tensor(scalers["ps_std"],  dtype=theta.dtype)
+
+    ps2d_mu, ps2d_sigma, _ = model(theta)
+
+    ps2d_pred       = ps2d_mu    * ps_std + ps_mean
+    ps2d_sigma_pred = ps2d_sigma * ps_std
+
+    return ps2d_pred.flatten(), ps2d_sigma_pred.flatten()
+
+
+def neg_log_prob_with_grad(theta_np, model, scalers, y_obs_t):
+    """Returns (scalar, gradient) for scipy L-BFGS-B."""
+    theta = torch.tensor(theta_np, dtype=torch.float32, requires_grad=True)
+
+    mu, sigma = run_inference_differentiable(model, theta, scalers)
+
+    ll = (
+        - 0.5 * math.log(2 * math.pi)
+        #- torch.log(sigma)
+        - 0.5 * ((y_obs_t - mu) / sigma) ** 2
+    ).sum()
+
+    (-ll).backward()
+
+    return (-ll).item(), theta.grad.numpy().astype(np.float64)
+
+
 def neg_log_prob(theta, model, scalers, y_obs):
-    """Negative log-posterior (minimized to find the MAP estimate)."""
     lp = log_prior(theta)
     if not np.isfinite(lp):
         return np.inf
-    _, _, _, ps_mu_log10, ps_sigma_log10 = run_inference(model, theta, scalers=scalers)
-    ll = log_likelihood_lognormal_log10(
-        y_obs, ps_mu_log10.flatten(), ps_sigma_log10.flatten()
+    ps2d_pred, _, ps2d_sigma_pred = run_inference(model, theta, scalers=scalers)
+    ll = log_likelihood_gaussian(
+        y_obs,
+        ps2d_pred.numpy().flatten(),
+        ps2d_sigma_pred.numpy().flatten(),
     )
     return -(lp + ll)
 
-def find_map_estimate(
-    model,
-    scalers,
-    y_obs: np.ndarray,
-    n_restarts: int = 40,
-    seed: int = 42,
-) -> np.ndarray:
-    rng     = np.random.default_rng(seed)
-    bounds  = list(zip(PRIOR_BOUNDS[:, 0], PRIOR_BOUNDS[:, 1]))
+
+# ── MAP ───────────────────────────────────────────────────────────────────────
+
+def find_map_estimate(model, scalers, y_obs, n_restarts=40, seed=42):
+    rng    = np.random.default_rng(seed)
+    bounds = list(zip(PRIOR_BOUNDS[:, 0], PRIOR_BOUNDS[:, 1]))
     y_obs_t = torch.tensor(y_obs, dtype=torch.float32)
-    '''scipy.optimize.differential_evolution'''
+
     best_val, best_theta = np.inf, None
 
     for i in range(n_restarts):
@@ -106,35 +152,35 @@ def find_map_estimate(
     print(f"ll  : {-best_val:.4f}")
     return best_theta
 
+
+# ── MCMC ──────────────────────────────────────────────────────────────────────
+
 def run_mcmc(
     model,
     scalers,
-    y_obs:        np.ndarray,
-    n_walkers:    int   = 32,
-    n_steps:      int   = 5_000,
-    burn_in:      int   = 1_000,
-    seed:         int   = 42,
-    theta_init:   np.ndarray = None,
-    init_noise_pct: float = 0.02,   # Gaussian spread as % of prior width
-) -> dict:
+    y_obs,
+    n_walkers=32,
+    n_steps=5_000,
+    burn_in=1_000,
+    seed=42,
+    theta_init=None,
+    init_noise_pct=0.02,
+):
     rng = np.random.default_rng(seed)
 
-    # ── Default: MAP estimate via gradient descent ───────────────────────────
     if theta_init is None:
         print("No theta_init supplied — running MAP optimization...")
         theta_init = find_map_estimate(model, scalers, y_obs, seed=seed)
 
-    # ── Scatter walkers around theta_init (Gaussian, a few % of prior width) -
     prior_width = PRIOR_BOUNDS[:, 1] - PRIOR_BOUNDS[:, 0]
-    sigma       = init_noise_pct * prior_width           # per-parameter std
-    p0          = theta_init + sigma * rng.standard_normal((n_walkers, N_DIM))
-    p0          = np.clip(p0, PRIOR_BOUNDS[:, 0] + 1e-6, PRIOR_BOUNDS[:, 1] - 1e-6)
+    sigma = init_noise_pct * prior_width
+    p0 = theta_init + sigma * rng.standard_normal((n_walkers, N_DIM))
+    p0 = np.clip(p0, PRIOR_BOUNDS[:, 0] + 1e-6, PRIOR_BOUNDS[:, 1] - 1e-6)
 
-    # ── Sampler ─────────────────────────────────────────────────────────────
     sampler = emcee.EnsembleSampler(
         n_walkers, N_DIM, log_prob,
         args=(model, scalers, y_obs),
-        moves=emcee.moves.StretchMove(a=1.5),  # default 2.0 → trop grand
+        moves=emcee.moves.StretchMove(a=1.5),
     )
 
     print(f"Running burn-in ({burn_in} steps, {n_walkers} walkers)...")
@@ -153,91 +199,49 @@ def run_mcmc(
     except emcee.autocorr.AutocorrError as e:
         print(f"Warning: autocorrelation estimate did not converge — {e}")
 
-    mean_accept = np.mean(sampler.acceptance_fraction)
-    print(f"Mean acceptance fraction: {mean_accept:.2%}")
+    print(f"Mean acceptance fraction: {np.mean(sampler.acceptance_fraction):.2%}")
 
     return {
         "chain":       sampler.get_chain(),
         "posterior":   flat_chain,
         "log_post":    log_post,
-        "accept_rate": mean_accept,
+        "accept_rate": np.mean(sampler.acceptance_fraction),
         "sampler":     sampler,
     }
 
-def run_inference_differentiable(
-    model: Emulator21cm,
-    theta: torch.Tensor,   # (6,) avec requires_grad=True
-    scalers,
-):
-    """
-    Same as run_inference but WITHOUT torch.no_grad() — keeps the
-    computation graph intact so autograd can differentiate through theta.
-    """
-    if theta.dim() == 1:
-        theta = theta.unsqueeze(0)
 
-    ps_mean = torch.tensor(scalers["ps_mean"], dtype=theta.dtype)
-    ps_std  = torch.tensor(scalers["ps_std"],  dtype=theta.dtype)
-
-    # model.eval() but NO torch.no_grad()
-    ps2d_mu, ps2d_sigma, xhi_mu = model(theta)
-
-    ps_mu_log10    = ps2d_mu    * ps_std + ps_mean
-    ps_sigma_log10 = ps2d_sigma * ps_std
-
-    return ps_mu_log10, ps_sigma_log10
-
-
-def neg_log_prob_with_grad(theta_np, model, scalers, y_obs_t):
-    theta = torch.tensor(theta_np, dtype=torch.float32, requires_grad=True)
-
-    ps_mu_log10, ps_sigma_log10 = run_inference_differentiable(model, theta, scalers)
-
-    mu_nat    = ps_mu_log10.flatten()    * math.log(10)
-    sigma_nat = ps_sigma_log10.flatten() * math.log(10)
-
-    ll = (
-        - torch.log(y_obs_t)
-        - torch.log(sigma_nat)
-        - 0.5 * ((torch.log(y_obs_t) - mu_nat) / sigma_nat) ** 2
-    ).sum()
-
-    (-ll).backward()
-
-    return (-ll).item(), theta.grad.numpy().astype(np.float64)
+# ── Entry point ───────────────────────────────────────────────────────────────
 
 def main():
     model          = load_emulator()
-    checkpoint_dir = "emulator/sigma_model/checkpoints"
+    checkpoint_dir = "emulator/sigma_model_no_log/checkpoints"
     scalers        = np.load(f"{checkpoint_dir}/scalers.npz")
-
-    split       = torch.load("emulator/sigma_model/checkpoints/dataset_split.pt")
+    split       = torch.load(f"{checkpoint_dir}/dataset_split.pt")
     test_thetas = split["test_thetas"]
     test_ps2d   = split["test_ps2d"]
-
-    theta_obs        = test_thetas[2].numpy()
-    test_ps2d_obs    = test_ps2d[2].numpy().flatten()
-
+    theta_obs     = np.array([0.86666667, 0.73333333, 0.575     , 0.46666666, 0.        ,0.30000001])
+    y_obs, xhi_cur, ps2d_sigma_cur = run_inference(model, theta_obs, scalers=scalers)
+    y_obs = y_obs.numpy().flatten()
+    print(xhi_cur.numpy())
     print("True theta:", theta_obs)
-    print("Log Likelihood at true theta:", log_prob(theta_obs, model, scalers, test_ps2d_obs))
-    # MAP estimate is found automatically inside run_mcmc when theta_init=None
-    
+    print("Log-likelihood at true theta:", log_prob(theta_obs, model, scalers, y_obs))
     results = run_mcmc(
-        model, scalers, test_ps2d_obs,
-        n_walkers=32,
-        n_steps=20_000,
-        burn_in=2_000,
+        model, scalers, y_obs,
+        n_walkers=8,
+       n_steps=10_000,
+        burn_in=1_000,
         seed=412,
-        init_noise_pct=0.02,   # ±2 % of prior width per parameter
+        init_noise_pct=0.1,
     )
 
     np.savez(
-        "emulator/sigma_model/mcmc_results.npz",
+        "emulator/sigma_model_no_log/mcmc_results.npz",
         chain=results["chain"],
         posterior=results["posterior"],
         log_post=results["log_post"],
         accept_rate=results["accept_rate"],
     )
+
 
 if __name__ == "__main__":
     main()

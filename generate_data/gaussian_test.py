@@ -21,7 +21,7 @@ def is_done(point_dir):
 def run_point(job_id):
     theta = theta_fid1
 
-    point_dir = f"gaussian_test1/point_{job_id:04d}"
+    point_dir = f"gaussian_test/point1_highres/point_{job_id:04d}"
     os.makedirs(point_dir, exist_ok=True)
 
     # Skip if already done (useful for resubmissions)

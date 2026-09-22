@@ -89,7 +89,6 @@ class Emulator21cm(nn.Module):
 
         # ── xHI ──────────────────────────────────────────────────────────────
         xhi_mu    = self.xhi_mu_head(h)                            # (B, 3)
-        #xhi_sigma = F.softplus(self.xhi_lsig_head(h))             # (B, 3)
 
         return ps2d_mu, ps2d_sigma, xhi_mu
 
@@ -132,37 +131,38 @@ def probabilistic_loss(
 def compute_scalers(
     ps2d: torch.Tensor,   # (N, 3, 10, 10)
 ):
-    log_ps = torch.log10(ps2d + 1e-30)                   # (N, 3, 10, 10)
-    ps_mean = log_ps.mean(dim=0, keepdim=True)           # (1, 3, 10, 10)
-    ps_std  = log_ps.std(dim=0, keepdim=True).clamp(min=1e-8)
-
+    """Compute per-pixel mean and std directly on PS (no log transform)."""
+    ps_mean = ps2d.mean(dim=0, keepdim=True)                       # (1, 3, 10, 10)
+    ps_std  = ps2d.std(dim=0, keepdim=True).clamp(min=1e-8)        # (1, 3, 10, 10)
     return ps_mean, ps_std
 
 
 def scale_ps(ps2d, ps_mean, ps_std):
-    return (torch.log10(ps2d + 1e-30) - ps_mean) / ps_std
+    """Standardise PS to zero mean, unit variance."""
+    return (ps2d - ps_mean) / ps_std
+
 
 def train(
     train_thetas : torch.Tensor,
     train_ps2d   : torch.Tensor,
     train_xhi    : torch.Tensor,
-    val_thetas   : torch.Tensor,        
-    val_ps2d     : torch.Tensor,        
-    val_xhi      : torch.Tensor,        
+    val_thetas   : torch.Tensor,
+    val_ps2d     : torch.Tensor,
+    val_xhi      : torch.Tensor,
     epochs       : int   = 1000,
     batch_size   : int   = 256,
     lr           : float = 1e-3,
     w_ps         : float = 1.0,
     w_xhi        : float = 1.0,
     checkpoint_dir: str  = "emulator/checkpoints",
-) -> tuple[Emulator21cm, dict]:         # ← returns history too
+) -> tuple[Emulator21cm, dict]:
 
     os.makedirs(checkpoint_dir, exist_ok=True)
 
     ps_mean, ps_std = compute_scalers(train_ps2d)
 
     train_ps2d_scaled = scale_ps(train_ps2d, ps_mean, ps_std)
-    # Scale val set with TRAIN scalers 
+    # Scale val set with TRAIN scalers
     val_ps2d_scaled = scale_ps(val_ps2d, ps_mean, ps_std)
 
     scaler_path = f"{checkpoint_dir}/scalers.npz"
@@ -181,7 +181,7 @@ def train(
         batch_size=batch_size, shuffle=True,
     )
 
-    history = {"train_loss": [], "val_loss": []}  
+    history = {"train_loss": [], "val_loss": []}
 
     for epoch in range(1, epochs + 1):
         # ── Train ──
@@ -193,7 +193,7 @@ def train(
                 ps2d_mu, ps2d_sigma, ps_b,
                 xhi_mu, xhi_b,
                 w_ps, w_xhi,
-            )   
+            )
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -211,8 +211,8 @@ def train(
                 w_ps, w_xhi,
             )[0].item()
 
-        history["train_loss"].append(avg_train)     
-        history["val_loss"].append(val_loss)        
+        history["train_loss"].append(avg_train)
+        history["val_loss"].append(val_loss)
 
         scheduler.step()
 
@@ -221,39 +221,38 @@ def train(
 
     torch.save(model.state_dict(), f"{checkpoint_dir}/emulator.pt")
     print(f"Model saved → {checkpoint_dir}/emulator.pt")
-    return model, history    #
+    return model, history
+
 
 def run_inference(
     model: Emulator21cm,
     theta: torch.Tensor,        # (N, 6) or (6,)
     checkpoint_dir: str = "emulator/sigma_model/checkpoints",
-    scalers = None
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-
+    scalers = None,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    """
+    Returns
+    -------
+    ps2d_pred       : (N, 3, 10, 10)  — PS in original (linear) units
+    ps2d_sigma_pred : (N, 3, 10, 10)  — predictive std in original units
+    xhi_mu          : (N, 3)          — neutral fraction in (0, 1)
+    """
     if scalers is None:
-        scalers  = np.load(f"{checkpoint_dir}/scalers.npz")
+        scalers = np.load(f"{checkpoint_dir}/scalers.npz")
     if isinstance(theta, np.ndarray):
         theta = torch.tensor(theta, dtype=torch.float32)
     if theta.dim() == 1:
-        theta = theta.unsqueeze(0)   
-    
-    ps_mean  = torch.tensor(scalers["ps_mean"])  
-    ps_std   = torch.tensor(scalers["ps_std"])    
-    LN10 = torch.log(torch.tensor(10.0, dtype=theta.dtype, device=theta.device))
+        theta = theta.unsqueeze(0)
+
+    ps_mean = torch.tensor(scalers["ps_mean"])   # (1, 3, 10, 10)
+    ps_std  = torch.tensor(scalers["ps_std"])     # (1, 3, 10, 10)
 
     model.eval()
     with torch.no_grad():
         ps2d_mu, ps2d_sigma, xhi_mu = model(theta)
 
-        # Unscale: back to log10(PS) space
-        ps_mu_log10    = ps2d_mu    * ps_std + ps_mean
-        ps_sigma_log10 = ps2d_sigma * ps_std
+        # Unscale: back to original PS units
+        ps2d_pred       = ps2d_mu    * ps_std + ps_mean   # mean in PS units
+        ps2d_sigma_pred = ps2d_sigma * ps_std              # std  in PS units
 
-        # Convert log10-normal params to linear-space mean and std
-        # If X = log10(PS) ~ N(mu, sigma²), then PS is log-normal in base 10:
-        #   E[PS]   = 10^(mu + 0.5 * sigma² * ln(10))
-        #   Std[PS] = E[PS] * sqrt(10^(sigma² * ln(10)) - 1)
-        ps2d_pred       = 10 ** (ps_mu_log10 + 0.5 * ps_sigma_log10 ** 2 * LN10)
-        ps2d_sigma_pred = ps2d_pred * torch.sqrt(10 ** (ps_sigma_log10 ** 2 * LN10) - 1)
-
-    return ps2d_pred, xhi_mu, ps2d_sigma_pred, ps_mu_log10, ps_sigma_log10
+    return ps2d_pred, xhi_mu, ps2d_sigma_pred
