@@ -11,7 +11,7 @@ def main():
 
     print("Generating datasets...")
     if not os.path.exists(dataset_path):
-        thetas, ps2d, xhi = load_dataset(results_dir="low_generate_data/results")
+        thetas, ps2d, xhi = load_dataset(results_dir="/gpfs/workdir/ouadjout/results")
         N = thetas.shape[0]
         idx = torch.randperm(N)
         thetas, ps2d, xhi = thetas[idx], ps2d[idx], xhi[idx]

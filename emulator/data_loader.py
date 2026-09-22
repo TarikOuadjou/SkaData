@@ -29,7 +29,7 @@ N_PARAMS  = len(PARAM_NAMES)
 LO = np.array([r[0] for r in PARAM_RANGES])   # shape (6,)
 HI = np.array([r[1] for r in PARAM_RANGES])   # shape (6,)
 
-def load_dataset(results_dir="results"):
+def load_dataset(results_dir="/gpfs/workdir/ouadjout/results"):
     """
     Walk through results/point_XXXX/ folders and load all successful points.
     Returns tensors ready for training.
@@ -82,7 +82,7 @@ def load_dataset(results_dir="results"):
     )
 
 if __name__ == "__main__":
-    thetas, ps2d, xhi = load_dataset(results_dir="low_generate_data/results")
+    thetas, ps2d, xhi = load_dataset(results_dir="/gpfs/workdir/ouadjout/results")
     print(f"thetas shape : {thetas.shape}")
     print(f"ps2d shape   : {ps2d.shape}")
     print(f"xhi shape    : {xhi.shape}")

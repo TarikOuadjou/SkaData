@@ -9,6 +9,8 @@ low_generate_data/log/
 low_generate_data/results/
 generated_data/log/
 results/
+gaussian_test/plot_*
+gaussian_test/point*
 # Virtual environments
 .venv
 .npy
